@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QuizApp</string>
+    <string name="user_name">Nome usuário</string>
+    <string name="start">Iniciar</string>
+    <string name="check">Verificar</string>
+    <string name="punctuation">Sua pontuação %1$s:</string>
+    <string name="assertiveness">Acertou %1$d pergunta(s) de %2$d</string>
+    <string name="restart">Reiniciar</string>
+</resources>
