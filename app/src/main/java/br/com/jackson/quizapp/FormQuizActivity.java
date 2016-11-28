@@ -1,9 +1,8 @@
 package br.com.jackson.quizapp;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,7 +14,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import br.com.jackson.quizapp.adapters.MyCustomAdapter;
@@ -83,12 +81,21 @@ public class FormQuizActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_formulario_ok :
-                Toast.makeText(FormQuizActivity.this, "Chora", Toast.LENGTH_SHORT).show();
-//                salvarFormulario();
+                salvarFormulario();
 //                finish();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void salvarFormulario() {
+        ListView listView = (ListView) findViewById(R.id.answers);
+        MyCustomAdapter myCustomAdapter = (MyCustomAdapter) listView.getAdapter();
+
+        List<String> answerList = myCustomAdapter.getAnswerList();
+        int selectedPositionRadioButton = myCustomAdapter.getSelectedPositionRadioButton();
+
+        Toast.makeText(FormQuizActivity.this, "Correct: " + selectedPositionRadioButton, Toast.LENGTH_SHORT).show();
     }
 }

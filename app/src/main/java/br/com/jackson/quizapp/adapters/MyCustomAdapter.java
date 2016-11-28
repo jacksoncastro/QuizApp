@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,24 +16,24 @@ import java.util.List;
 import br.com.jackson.quizapp.R;
 
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
-    private List<String> list = new ArrayList<>();
+    private List<String> answerList = new ArrayList<>();
     private Context context;
-    private RadioButton mSelectedRB;
-    private int mSelectedPosition = -1;
+    private RadioButton selectedRadioButton;
+    private int selectedPositionRadioButton = -1;
 
-    public MyCustomAdapter(List<String> list, Context context) {
-        this.list = list;
+    public MyCustomAdapter(List<String> answerList, Context context) {
+        this.answerList = answerList;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return list.size();
+        return answerList.size();
     }
 
     @Override
     public Object getItem(int pos) {
-        return list.get(pos);
+        return answerList.get(pos);
     }
 
     @Override
@@ -56,13 +55,15 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         Button deleteBtn = (Button) view.findViewById(R.id.delete_btn);
 
         RadioButton radioButton = (RadioButton) view.findViewById(R.id.list_item_radio_button);
-        radioButton.setText(list.get(position));
+        radioButton.setText(answerList.get(position));
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //do something
-                list.remove(position); //or some other task
+                answerList.remove(position); //or some other task
+                selectedRadioButton = null;
+                selectedPositionRadioButton = -1;
                 notifyDataSetChanged();
             }
         });
@@ -75,33 +76,36 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         });
 
 
-        if (mSelectedPosition != position) {
+        if (selectedPositionRadioButton != position) {
             radioButton.setChecked(false);
         } else {
             radioButton.setChecked(true);
-            if (mSelectedRB != null && radioButton != mSelectedRB) {
-                mSelectedRB = radioButton;
+            if (selectedRadioButton != null && radioButton != selectedRadioButton) {
+                selectedRadioButton = radioButton;
             }
         }
-
-//        addBtn.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                //do something
-//                notifyDataSetChanged();
-//            }
-//        });
-
         return view;
     }
 
 
     private void eventRadioList(View view, int position) {
-        if(position != mSelectedPosition && mSelectedRB != null){
-            mSelectedRB.setChecked(false);
+        if (position != selectedPositionRadioButton && selectedRadioButton != null) {
+            selectedRadioButton.setChecked(false);
         }
 
-        mSelectedPosition = position;
-        mSelectedRB = (RadioButton) view;
+        selectedPositionRadioButton = position;
+        selectedRadioButton = (RadioButton) view;
+    }
+
+    public RadioButton getSelectedRadioButton() {
+        return selectedRadioButton;
+    }
+
+    public int getSelectedPositionRadioButton() {
+        return selectedPositionRadioButton;
+    }
+
+    public List<String> getAnswerList() {
+        return answerList;
     }
 }
