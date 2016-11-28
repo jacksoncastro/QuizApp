@@ -6,4 +6,8 @@
     <string name="punctuation">Your punctuation %1$s:</string>
     <string name="assertiveness">Got %1$d question(s) out of %2$d</string>
     <string name="restart">Restart</string>
+    <string name="form_quiz_question">Question</string>
+    <string name="new_answer_edit">New answer</string>
+    <string name="field_empty">Answer cannot be empty</string>
+    <string name="form_quiz_link_image">Link of a image</string>
 </resources>

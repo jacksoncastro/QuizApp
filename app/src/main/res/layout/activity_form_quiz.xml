@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_form_quiz"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="br.com.jackson.quizapp.FormQuizActivity">
+
+    <EditText
+        android:id="@+id/question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:hint="@string/form_quiz_question" />
+
+    <EditText
+        android:id="@+id/link_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/question"
+        android:hint="@string/form_quiz_link_image"
+        android:inputType="textUri"
+        android:maxLines="1"
+        />
+
+    <EditText
+        android:id="@+id/new_answer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/link_image"
+        android:layout_toLeftOf="@+id/add_answer"
+        android:layout_toStartOf="@+id/add_answer"
+        android:layout_marginTop="20dp"
+        android:hint="@string/new_answer_edit"
+        android:maxLines="3"
+        android:maxLength="100"/>
+
+    <ListView
+        android:id="@+id/answers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/new_answer"
+        android:layout_marginTop="10dp">
+    </ListView>
+
+    <Button
+        android:id="@+id/add_answer"
+        android:layout_width="50dp"
+        android:layout_height="46dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/new_answer"
+        android:background="@drawable/add_64px"
+        />
+
+</RelativeLayout>

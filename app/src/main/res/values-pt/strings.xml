@@ -7,4 +7,8 @@
     <string name="punctuation">Sua pontuação %1$s:</string>
     <string name="assertiveness">Acertou %1$d pergunta(s) de %2$d</string>
     <string name="restart">Reiniciar</string>
+    <string name="form_quiz_question">Pergunta</string>
+    <string name="new_answer_edit">Nova resposta</string>
+    <string name="field_empty">A resposta não pode ser vazia</string>
+    <string name="form_quiz_link_image">Link de uma imagem</string>
 </resources>
