@@ -14,14 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jackson.quizapp.R;
+import br.com.jackson.quizapp.model.Item;
 
 public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
-    private List<String> answerList = new ArrayList<>();
+    private List<Item> answerList = new ArrayList<>();
     private Context context;
     private RadioButton selectedRadioButton;
     private int selectedPositionRadioButton = -1;
 
-    public MyCustomAdapter(List<String> answerList, Context context) {
+    public MyCustomAdapter(List<Item> answerList, Context context) {
         this.answerList = answerList;
         this.context = context;
     }
@@ -55,7 +56,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         Button deleteBtn = (Button) view.findViewById(R.id.delete_btn);
 
         RadioButton radioButton = (RadioButton) view.findViewById(R.id.list_item_radio_button);
-        radioButton.setText(answerList.get(position));
+        radioButton.setText(answerList.get(position).getAnswer());
 
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,7 +106,7 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
         return selectedPositionRadioButton;
     }
 
-    public List<String> getAnswerList() {
+    public List<Item> getAnswerList() {
         return answerList;
     }
 }

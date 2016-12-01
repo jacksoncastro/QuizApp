@@ -1,24 +1,36 @@
 package br.com.jackson.quizapp.model;
 
+import java.util.List;
+
 /**
  * Created by root on 18/11/16.
  */
 
 public class Quiz {
 
-    private int imageId;
+    private Integer id;
 
     private String question;
 
-    private String[] itens;
+    private String imageLink;
+
+    private List<Item> items;
 
     private int rightAnswer;
 
-    public Quiz(int imageId, String question, String[] itens, int rightAnswer) {
-        this.imageId = imageId;
+    public Quiz() {
+    }
+
+    public Quiz(String question, String imageLink, List<Item> items) {
         this.question = question;
-        this.itens = itens;
-        this.rightAnswer = rightAnswer;
+        this.imageLink = imageLink;
+        this.items = items;
+    }
+
+    public Quiz(Integer id, String question, String imageLink) {
+        this.id = id;
+        this.question = question;
+        this.imageLink = imageLink;
     }
 
     public String getQuestion() {
@@ -29,20 +41,20 @@ public class Quiz {
         this.question = question;
     }
 
-    public int getImageId() {
-        return imageId;
+    public String getImageLink() {
+        return imageLink;
     }
 
-    public void setImageId(int imageId) {
-        this.imageId = imageId;
+    public void setImageLink(String imageLink) {
+        this.imageLink = imageLink;
     }
 
-    public String[] getItens() {
-        return itens;
+    public List<Item> getItems() {
+        return items;
     }
 
-    public void setItens(String[] itens) {
-        this.itens = itens;
+    public void setItems(List<Item> items) {
+        this.items = items;
     }
 
     public int getRightAnswer() {

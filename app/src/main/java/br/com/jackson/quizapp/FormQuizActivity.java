@@ -17,10 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jackson.quizapp.adapters.MyCustomAdapter;
+import br.com.jackson.quizapp.dao.ItemDAO;
+import br.com.jackson.quizapp.dao.QuizDAO;
+import br.com.jackson.quizapp.dao.RightAnswerDAO;
+import br.com.jackson.quizapp.model.Item;
+import br.com.jackson.quizapp.model.Quiz;
+import br.com.jackson.quizapp.model.RightAnswer;
 
 public class FormQuizActivity extends AppCompatActivity {
 
-    private List<String> answers = new ArrayList<>();
+    private List<Item> answers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +58,7 @@ public class FormQuizActivity extends AppCompatActivity {
 
 
     private void addNewAnswer(EditText editText, ListView listView) {
-        answers.add(editText.getText().toString());
+        answers.add(new Item(editText.getText().toString()));
 
         //instantiate custom adapter
         MyCustomAdapter adapter = new MyCustomAdapter(answers, FormQuizActivity.this);
@@ -81,7 +87,7 @@ public class FormQuizActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_formulario_ok :
-                salvarFormulario();
+                saveForm();
 //                finish();
                 break;
         }
@@ -89,13 +95,75 @@ public class FormQuizActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void salvarFormulario() {
+    private void saveForm() {
         ListView listView = (ListView) findViewById(R.id.answers);
         MyCustomAdapter myCustomAdapter = (MyCustomAdapter) listView.getAdapter();
 
-        List<String> answerList = myCustomAdapter.getAnswerList();
-        int selectedPositionRadioButton = myCustomAdapter.getSelectedPositionRadioButton();
+        EditText question = (EditText) findViewById(R.id.question);
 
-        Toast.makeText(FormQuizActivity.this, "Correct: " + selectedPositionRadioButton, Toast.LENGTH_SHORT).show();
+        EditText linkImage = (EditText) findViewById(R.id.link_image);
+
+        List<Item> answerList = myCustomAdapter.getAnswerList();
+
+        int correctItem = myCustomAdapter.getSelectedPositionRadioButton();
+
+        Quiz quiz = new Quiz(question.getText().toString(), linkImage.getText().toString(), answerList);
+
+        saveData(quiz, correctItem);
+
+        Toast.makeText(FormQuizActivity.this, "Correct: " + correctItem, Toast.LENGTH_SHORT).show();
+    }
+
+    private void saveData(Quiz quiz, int correctItemPosition) {
+        // save items in database
+        int rightItemId = saveItems(quiz.getItems(), correctItemPosition);
+
+        // save quiz in database
+        int quizId = saveQuiz(quiz);
+
+        RightAnswer rightAnswer = new RightAnswer(quizId, rightItemId);
+
+        // save right answer in database
+        saveRightAnswer(rightAnswer);
+    }
+
+    private int saveQuiz(Quiz quiz) {
+        QuizDAO quizDAO = new QuizDAO(FormQuizActivity.this);
+        try {
+            return quizDAO.insert(quiz);
+        } finally {
+            if (quizDAO != null) {
+                quizDAO.close();
+            }
+        }
+    }
+
+    private int saveItems(List<Item> items, int correctItem) {
+        int rightItemId = 0;
+        ItemDAO itemDAO = new ItemDAO(FormQuizActivity.this);
+        try {
+            for (int i=0; i < items.size(); i++) {
+                int id = itemDAO.insert(items.get(i));
+                if (i == correctItem) {
+                    rightItemId = id;
+                }
+            }
+        } finally {
+            if (itemDAO != null) {
+                itemDAO.close();
+            }
+        }
+        return rightItemId;
+    }
+
+    private void saveRightAnswer(RightAnswer rightAnswer) {
+        RightAnswerDAO rightAnswerDAO = new RightAnswerDAO(FormQuizActivity.this);
+        try {
+            rightAnswerDAO.insert(rightAnswer);
+        } finally {
+            if (rightAnswerDAO != null) {
+                rightAnswerDAO.close();
+            }
+        }
     }
 }
