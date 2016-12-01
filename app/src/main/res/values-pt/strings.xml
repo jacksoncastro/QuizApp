@@ -11,4 +11,5 @@
     <string name="new_answer_edit">Nova resposta</string>
     <string name="field_empty">A resposta não pode ser vazia</string>
     <string name="form_quiz_link_image">Link de uma imagem</string>
+    <string name="questions">Questões</string>
 </resources>

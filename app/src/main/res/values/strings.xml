@@ -10,4 +10,5 @@
     <string name="new_answer_edit">New answer</string>
     <string name="field_empty">Answer cannot be empty</string>
     <string name="form_quiz_link_image">Link of a image</string>
+    <string name="questions">Questions</string>
 </resources>
