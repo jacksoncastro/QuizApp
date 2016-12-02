@@ -5,8 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
 
-import org.apache.commons.io.IOUtils;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jackson.quizapp.helper.MySQLiteHelper;
@@ -27,6 +26,32 @@ public class QuizDAO extends MySQLiteHelper {
     public int countAll () {
         return (int) DatabaseUtils.queryNumEntries(getReadableDatabase(), TABLE_NAME);
     }
+
+
+    public List<Quiz> findAll() {
+        String[] columns = {"id", "question", "image_link"};
+        String orderBy = "question";
+
+        Cursor cursor = getReadableDatabase().query(TABLE_NAME, columns, null, null, null, null, orderBy);
+
+        List<Quiz> quizList = new ArrayList<>();
+
+        try {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String question = cursor.getString(cursor.getColumnIndex("question"));
+                String imageLink = cursor.getString(cursor.getColumnIndex("image_link"));
+
+                quizList.add(new Quiz(id, question, imageLink));
+            }
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return quizList;
+    }
+
 
     public Quiz findById(int quizId) {
         String[] columns = {"id", "question", "image_link"};
