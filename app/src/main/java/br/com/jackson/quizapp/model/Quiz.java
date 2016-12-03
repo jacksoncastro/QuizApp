@@ -1,12 +1,16 @@
 package br.com.jackson.quizapp.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by root on 18/11/16.
  */
 
-public class Quiz {
+public class Quiz implements Parcelable {
 
     private Integer id;
 
@@ -31,6 +35,51 @@ public class Quiz {
         this.id = id;
         this.question = question;
         this.imageLink = imageLink;
+    }
+
+    protected Quiz(Parcel in) {
+        id = in.readInt();
+        question = in.readString();
+        imageLink = in.readString();
+        rightAnswer = in.readInt();
+
+//        in.readTypedList(items, Item.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeTypedList(items);
+
+        dest.writeInt(id);
+        dest.writeString(question);
+        dest.writeString(imageLink);
+        dest.writeInt(rightAnswer);
+
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Quiz> CREATOR = new Creator<Quiz>() {
+        @Override
+        public Quiz createFromParcel(Parcel in) {
+            return new Quiz(in);
+        }
+
+        @Override
+        public Quiz[] newArray(int size) {
+            return new Quiz[size];
+        }
+    };
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getQuestion() {

@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
 
-import br.com.jackson.quizapp.adapters.MyRecyclerViewAdapter;
+import br.com.jackson.quizapp.adapters.MyQuestionAdapter;
 import br.com.jackson.quizapp.dao.QuizDAO;
 import br.com.jackson.quizapp.model.Quiz;
 
@@ -21,18 +21,14 @@ public class QuestionsActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_questions);
 
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         recyclerView.setHasFixedSize(true);
 
-        // use a linear layout manager
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(mLayoutManager);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
         List<Quiz> quizList = findAllQuiz();
 
-        // specify an adapter (see also next example)
-        MyRecyclerViewAdapter myRecyclerViewAdapter = new MyRecyclerViewAdapter(quizList);
+        MyQuestionAdapter myRecyclerViewAdapter = new MyQuestionAdapter(quizList);
         recyclerView.setAdapter(myRecyclerViewAdapter);
     }
 

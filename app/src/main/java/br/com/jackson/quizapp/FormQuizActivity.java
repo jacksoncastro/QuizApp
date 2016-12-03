@@ -115,11 +115,11 @@ public class FormQuizActivity extends AppCompatActivity {
     }
 
     private void saveData(Quiz quiz, int correctItemPosition) {
-        // save items in database
-        int rightItemId = saveItems(quiz.getItems(), correctItemPosition);
-
         // save quiz in database
         int quizId = saveQuiz(quiz);
+
+        // save items in database
+        int rightItemId = saveItems(quiz.getItems(), quizId, correctItemPosition);
 
         RightAnswer rightAnswer = new RightAnswer(quizId, rightItemId);
 
@@ -138,11 +138,12 @@ public class FormQuizActivity extends AppCompatActivity {
         }
     }
 
-    private int saveItems(List<Item> items, int correctItem) {
+    private int saveItems(List<Item> items, int quizId, int correctItem) {
         int rightItemId = 0;
         ItemDAO itemDAO = new ItemDAO(FormQuizActivity.this);
         try {
             for (int i=0; i < items.size(); i++) {
+                items.get(i).setQuizId(quizId);
                 int id = itemDAO.insert(items.get(i));
                 if (i == correctItem) {
                     rightItemId = id;

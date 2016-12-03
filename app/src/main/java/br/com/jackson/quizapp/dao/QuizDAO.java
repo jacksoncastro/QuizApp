@@ -52,30 +52,6 @@ public class QuizDAO extends MySQLiteHelper {
         return quizList;
     }
 
-
-    public Quiz findById(int quizId) {
-        String[] columns = {"id", "question", "image_link"};
-        String selection = "id=?";
-        String[] selectionArgs = {String.valueOf(quizId)};
-        String orderBy = "id";
-        Cursor cursor = getReadableDatabase().query(TABLE_NAME, columns, selection, selectionArgs, null, null, orderBy);
-
-        try {
-            while (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndex("id"));
-                String question = cursor.getString(cursor.getColumnIndex("question"));
-                String imageLink = cursor.getString(cursor.getColumnIndex("image_link"));
-
-                return new Quiz(id, question, imageLink);
-            }
-        } finally {
-            if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
-            }
-        }
-        return null;
-    }
-
     public int insert (Quiz quiz) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("question", quiz.getQuestion());
