@@ -52,6 +52,31 @@ public class QuizDAO extends MySQLiteHelper {
         return quizList;
     }
 
+    public List<Quiz> findAllRandomWithLimit(int limit) {
+
+        String sql = "SELECT id, question, image_link FROM %s GROUP BY 1,2,3 ORDER BY RANDOM() LIMIT %d;";
+        sql = String.format(sql, TABLE_NAME, limit);
+
+        Cursor cursor = getReadableDatabase().rawQuery(sql, null);
+
+        List<Quiz> quizList = new ArrayList<>();
+
+        try {
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex("id"));
+                String question = cursor.getString(cursor.getColumnIndex("question"));
+                String imageLink = cursor.getString(cursor.getColumnIndex("image_link"));
+
+                quizList.add(new Quiz(id, question, imageLink));
+            }
+        } finally {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return quizList;
+    }
+
     public int insert (Quiz quiz) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("question", quiz.getQuestion());

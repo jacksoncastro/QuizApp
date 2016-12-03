@@ -9,7 +9,19 @@
     <string name="restart">Reiniciar</string>
     <string name="form_quiz_question">Pergunta</string>
     <string name="new_answer_edit">Nova resposta</string>
-    <string name="field_empty">A resposta não pode ser vazia</string>
+    <string name="field_answer_empty">A resposta não pode ser vazia</string>
     <string name="form_quiz_link_image">Link de uma imagem</string>
     <string name="questions">Questões</string>
+    <string name="add_questions">Adicionar Questões</string>
+    <string name="label_level_game">Nível</string>
+    <string name="field_link_image_empty">Campo Link imagem não pode ser vazio</string>
+    <string name="field_question_empty">Campo Questão não pode ser vazio</string>
+    <string name="radio_button_correct_item_empty">Marque a resposta correta</string>
+    <string name="form_quiz_save_success">Formulário salvo com sucesso</string>
+
+    <string-array name="level_game">
+        <item>Fácil</item>
+        <item>Médio</item>
+        <item>Difícil</item>
+    </string-array>
 </resources>

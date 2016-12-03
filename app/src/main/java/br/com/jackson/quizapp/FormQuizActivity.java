@@ -40,32 +40,40 @@ public class FormQuizActivity extends AppCompatActivity {
         final ListView listView = (ListView)findViewById(R.id.answers);
         listView.setAdapter(adapter);
 
-        Button addAnswerButton = (Button) findViewById(R.id.add_answer);
+        final Button addAnswerButton = (Button) findViewById(R.id.add_answer);
         addAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                EditText editText = (EditText) findViewById(R.id.new_answer);
-
-                if (editText.getText().toString().isEmpty()) {
-                    Toast.makeText(FormQuizActivity.this, R.string.field_empty, Toast.LENGTH_SHORT).show();
-                } else {
-                    addNewAnswer(editText, listView);
+                try {
+                    // valid form before add a new answer
+                    validFieldAnswer();
+                    // add new answer into listview
+                    addNewAnswer(listView);
+                } catch (FormValidationException e) {
+                    Toast.makeText(FormQuizActivity.this, e.getMessageId(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
+    private void validFieldAnswer() throws FormValidationException {
+        EditText newAnswer = (EditText) findViewById(R.id.new_answer);
+        if (newAnswer != null && newAnswer.getText().toString().isEmpty()) {
+            throw new FormValidationException(R.string.field_answer_empty);
+        }
+    }
 
-    private void addNewAnswer(EditText editText, ListView listView) {
-        answers.add(new Item(editText.getText().toString()));
+
+    private void addNewAnswer(ListView listView) {
+        EditText newAnswer = (EditText) findViewById(R.id.new_answer);
+        answers.add(new Item(newAnswer.getText().toString()));
 
         //instantiate custom adapter
         MyCustomAdapter adapter = new MyCustomAdapter(answers, FormQuizActivity.this);
 
         listView.setAdapter(adapter);
 
-        editText.setText(null);
+        newAnswer.setText(null);
 
         closeKeyboard(listView);
     }
@@ -87,12 +95,37 @@ public class FormQuizActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_formulario_ok :
-                saveForm();
-//                finish();
+                try {
+                    validForm();
+                    saveForm();
+                    finish();
+                } catch (FormValidationException e) {
+                    Toast.makeText(FormQuizActivity.this, e.getMessageId(), Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void validForm() throws FormValidationException {
+        EditText question = (EditText) findViewById(R.id.question);
+        if (question != null && question.getText().toString().isEmpty()) {
+            throw new FormValidationException(R.string.field_question_empty);
+        }
+
+        EditText linkImage = (EditText) findViewById(R.id.link_image);
+        if (linkImage != null && linkImage.getText().toString().isEmpty()) {
+            throw new FormValidationException(R.string.field_link_image_empty);
+        }
+
+        ListView listView = (ListView) findViewById(R.id.answers);
+        MyCustomAdapter myCustomAdapter = (MyCustomAdapter) listView.getAdapter();
+        int correctItem = myCustomAdapter.getSelectedPositionRadioButton();
+
+        if (correctItem == -1) {
+            throw new FormValidationException(R.string.radio_button_correct_item_empty);
+        }
     }
 
     private void saveForm() {
@@ -111,7 +144,7 @@ public class FormQuizActivity extends AppCompatActivity {
 
         saveData(quiz, correctItem);
 
-        Toast.makeText(FormQuizActivity.this, "Correct: " + correctItem, Toast.LENGTH_SHORT).show();
+        Toast.makeText(FormQuizActivity.this, R.string.form_quiz_save_success, Toast.LENGTH_SHORT).show();
     }
 
     private void saveData(Quiz quiz, int correctItemPosition) {

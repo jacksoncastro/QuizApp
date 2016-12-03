@@ -20,14 +20,11 @@ import java.util.List;
 
 import br.com.jackson.quizapp.dao.ItemDAO;
 import br.com.jackson.quizapp.dao.QuizDAO;
+import br.com.jackson.quizapp.enums.LevelEnum;
 import br.com.jackson.quizapp.model.Item;
 import br.com.jackson.quizapp.model.Quiz;
 
 public class QuizActivity extends AppCompatActivity {
-
-    public static final String EXTRA_LAST_QUESTION_POSITION = "LAST_QUESTION_POSITION";
-    public static final String EXTRA_PUNCTUATION = "PUNCTUATION";
-    public static final String EXTRA_TOTAL_QUESTIONS = "TOTAL_QUESTIONS";
 
     private Quiz currentQuestion;
     private int currentPosition = 0;
@@ -44,27 +41,29 @@ public class QuizActivity extends AppCompatActivity {
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setItemChecked(0, true);
 
-        List<Quiz> quizList = getQuiz();
-
         Bundle extras = getIntent().getExtras();
 
+        LevelEnum levelEnum = LevelEnum.EASY;
+
         if (extras != null) {
-            if (extras.get(MainActivity.EXTRA_USER_NAME) != null) {
-                userName = extras.getString(MainActivity.EXTRA_USER_NAME);
+            if (extras.get(Constants.EXTRA_USER_NAME) != null) {
+                userName = extras.getString(Constants.EXTRA_USER_NAME);
             }
-            if (extras.get(EXTRA_LAST_QUESTION_POSITION) != null) {
-                currentPosition = extras.getInt(EXTRA_LAST_QUESTION_POSITION);
+            if (extras.get(Constants.EXTRA_LAST_QUESTION_POSITION) != null) {
+                currentPosition = extras.getInt(Constants.EXTRA_LAST_QUESTION_POSITION);
             }
-            if (extras.get(EXTRA_PUNCTUATION) != null) {
-                punctuation = extras.getInt(EXTRA_PUNCTUATION);
+            if (extras.get(Constants.EXTRA_PUNCTUATION) != null) {
+                punctuation = extras.getInt(Constants.EXTRA_PUNCTUATION);
             }
         }
 
+        List<Quiz> quizList = getQuiz(levelEnum);
+
         if (quizList.size() <= currentPosition) {
             Intent intent = new Intent(QuizActivity.this, PunctuationAcitivity.class);
-            intent.putExtra(EXTRA_TOTAL_QUESTIONS, quizList.size());
-            intent.putExtra(EXTRA_PUNCTUATION, punctuation);
-            intent.putExtra(MainActivity.EXTRA_USER_NAME, userName);
+            intent.putExtra(Constants.EXTRA_TOTAL_QUESTIONS, quizList.size());
+            intent.putExtra(Constants.EXTRA_PUNCTUATION, punctuation);
+            intent.putExtra(Constants.EXTRA_USER_NAME, userName);
 
             startActivity(intent);
             finish();
@@ -99,9 +98,9 @@ public class QuizActivity extends AppCompatActivity {
                     }
 
                     Intent intent = new Intent(QuizActivity.this, QuizActivity.class);
-                    intent.putExtra(EXTRA_LAST_QUESTION_POSITION, currentPosition + 1);
-                    intent.putExtra(EXTRA_PUNCTUATION, punctuation);
-                    intent.putExtra(MainActivity.EXTRA_USER_NAME, userName);
+                    intent.putExtra(Constants.EXTRA_LAST_QUESTION_POSITION, currentPosition + 1);
+                    intent.putExtra(Constants.EXTRA_PUNCTUATION, punctuation);
+                    intent.putExtra(Constants.EXTRA_USER_NAME, userName);
 
                     startActivity(intent);
                     finish();
@@ -128,11 +127,11 @@ public class QuizActivity extends AppCompatActivity {
         return list;
     }
 
-    public List<Quiz> getQuiz() {
+    public List<Quiz> getQuiz(LevelEnum levelEnum) {
         QuizDAO quizDAO = new QuizDAO(QuizActivity.this);
 
         try {
-            List<Quiz> quizList = quizDAO.findAll();
+            List<Quiz> quizList = quizDAO.findAllRandomWithLimit(levelEnum.getAmount());
 
             for (Quiz quiz : quizList) {
                 List<Item> items = findItemsByQuizId(quiz.getId());

@@ -15,7 +15,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:inputType="text" />
+        android:inputType="text"
+        android:layout_marginBottom="10dp"/>
+
+    <TextView
+        android:id="@+id/label_level_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_name"
+        android:text="@string/label_level_game"
+        android:layout_marginLeft="10dp"/>
+
+    <Spinner
+        android:id="@+id/level_game_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/label_level_game" >
+
+    </Spinner>
 
     <Button
         android:id="@+id/start"
@@ -24,6 +41,15 @@
         android:text="@string/start"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_questions"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/add_questions" />
 
     <Button
         android:layout_width="wrap_content"

@@ -8,7 +8,19 @@
     <string name="restart">Restart</string>
     <string name="form_quiz_question">Question</string>
     <string name="new_answer_edit">New answer</string>
-    <string name="field_empty">Answer cannot be empty</string>
+    <string name="field_answer_empty">Answer cannot be empty</string>
     <string name="form_quiz_link_image">Link of a image</string>
     <string name="questions">Questions</string>
+    <string name="add_questions">Add Questions</string>
+    <string name="label_level_game">Level</string>
+    <string name="field_link_image_empty">Field Link image cannot be empty</string>
+    <string name="field_question_empty">Field question cannot be empty</string>
+    <string name="radio_button_correct_item_empty">Select the correct answer</string>
+    <string name="form_quiz_save_success">Form save with success</string>
+
+    <string-array name="level_game">
+        <item>Easy</item>
+        <item>Medium</item>
+        <item>Hard</item>
+    </string-array>
 </resources>
