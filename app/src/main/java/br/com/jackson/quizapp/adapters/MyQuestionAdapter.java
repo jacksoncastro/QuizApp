@@ -79,7 +79,6 @@ public class MyQuestionAdapter extends RecyclerView.Adapter<MyQuestionAdapter.Vi
     }
 
 
-
     @Override
     public int getItemCount() {
         return quizList.size();

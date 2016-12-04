@@ -18,6 +18,9 @@ import br.com.jackson.quizapp.model.Quiz;
 public class QuizDAO extends MySQLiteHelper {
 
     private final String TABLE_NAME = "quiz";
+    private final String COLUMN_ID = "id";
+    private final String COLUMN_QUESTION = "question";
+    private final String COLUMN_IMAGE_LINK = "image_link";
 
     public QuizDAO(Context context) {
         super(context);
@@ -29,8 +32,8 @@ public class QuizDAO extends MySQLiteHelper {
 
 
     public List<Quiz> findAll() {
-        String[] columns = {"id", "question", "image_link"};
-        String orderBy = "question";
+        String[] columns = {COLUMN_ID, COLUMN_QUESTION, COLUMN_IMAGE_LINK};
+        String orderBy = COLUMN_QUESTION;
 
         Cursor cursor = getReadableDatabase().query(TABLE_NAME, columns, null, null, null, null, orderBy);
 
@@ -38,9 +41,9 @@ public class QuizDAO extends MySQLiteHelper {
 
         try {
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndex("id"));
-                String question = cursor.getString(cursor.getColumnIndex("question"));
-                String imageLink = cursor.getString(cursor.getColumnIndex("image_link"));
+                int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                String question = cursor.getString(cursor.getColumnIndex(COLUMN_QUESTION));
+                String imageLink = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_LINK));
 
                 quizList.add(new Quiz(id, question, imageLink));
             }
@@ -54,8 +57,8 @@ public class QuizDAO extends MySQLiteHelper {
 
     public List<Quiz> findAllRandomWithLimit(int limit) {
 
-        String sql = "SELECT id, question, image_link FROM %s GROUP BY 1,2,3 ORDER BY RANDOM() LIMIT %d;";
-        sql = String.format(sql, TABLE_NAME, limit);
+        String sql = "SELECT %s, %s, %s FROM %s GROUP BY 1,2,3 ORDER BY RANDOM() LIMIT %d;";
+        sql = String.format(sql, COLUMN_ID, COLUMN_QUESTION, COLUMN_IMAGE_LINK, TABLE_NAME, limit);
 
         Cursor cursor = getReadableDatabase().rawQuery(sql, null);
 
@@ -63,9 +66,9 @@ public class QuizDAO extends MySQLiteHelper {
 
         try {
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndex("id"));
-                String question = cursor.getString(cursor.getColumnIndex("question"));
-                String imageLink = cursor.getString(cursor.getColumnIndex("image_link"));
+                int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                String question = cursor.getString(cursor.getColumnIndex(COLUMN_QUESTION));
+                String imageLink = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_LINK));
 
                 quizList.add(new Quiz(id, question, imageLink));
             }
@@ -79,8 +82,8 @@ public class QuizDAO extends MySQLiteHelper {
 
     public int insert (Quiz quiz) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("question", quiz.getQuestion());
-        contentValues.put("image_link", quiz.getImageLink());
+        contentValues.put(COLUMN_QUESTION, quiz.getQuestion());
+        contentValues.put(COLUMN_IMAGE_LINK, quiz.getImageLink());
         return (int) getWritableDatabase().insert(TABLE_NAME, null, contentValues);
     }
 }

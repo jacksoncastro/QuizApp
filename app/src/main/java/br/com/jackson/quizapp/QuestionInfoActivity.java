@@ -1,12 +1,11 @@
 package br.com.jackson.quizapp;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -25,13 +24,16 @@ public class QuestionInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_info);
 
+        // set data for list info
+        setDataInfo();
+    }
+
+    private void setDataInfo() {
         Quiz quiz = getIntent().getParcelableExtra(Constants.EXTRA_QUIZ);
 
         List<Item> items = getItemsQuiz(quiz);
 
         quiz.setItems(items);
-
-        int rightItemIdQuiz = getRightItemIdQuiz(quiz);
 
         TextView questionInfoTitle = (TextView) findViewById(R.id.question_info_title);
         questionInfoTitle.setText(quiz.getQuestion());
@@ -40,6 +42,12 @@ public class QuestionInfoActivity extends AppCompatActivity {
         ImageView questionInfoImage = (ImageView) findViewById(R.id.question_info_image);
         Picasso.with(QuestionInfoActivity.this).load(quiz.getImageLink()).error(R.drawable.image_not_found).resize(100, 100).into(questionInfoImage);
 
+        int rightItemIdQuiz = getRightItemIdQuiz(quiz);
+
+        createRecyclerView(items, rightItemIdQuiz);
+    }
+
+    private void createRecyclerView(List<Item> items, int rightItemIdQuiz) {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_question_info);
         recyclerView.setHasFixedSize(true);
 
@@ -49,6 +57,7 @@ public class QuestionInfoActivity extends AppCompatActivity {
         MyItemInfoAdapter myRecyclerViewAdapter = new MyItemInfoAdapter(items, rightItemIdQuiz);
         recyclerView.setAdapter(myRecyclerViewAdapter);
     }
+
 
     private int getRightItemIdQuiz(Quiz quiz) {
         RightAnswerDAO rightAnswerDAO = new RightAnswerDAO(QuestionInfoActivity.this);
@@ -73,6 +82,5 @@ public class QuestionInfoActivity extends AppCompatActivity {
                 itemDAO.close();
             }
         }
-
     }
 }

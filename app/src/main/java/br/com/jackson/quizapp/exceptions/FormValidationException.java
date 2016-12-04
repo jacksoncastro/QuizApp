@@ -1,4 +1,4 @@
-package br.com.jackson.quizapp;
+package br.com.jackson.quizapp.exceptions;
 
 /**
  * Created by jackson on 03/12/16.

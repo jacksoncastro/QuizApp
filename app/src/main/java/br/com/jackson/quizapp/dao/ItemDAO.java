@@ -18,23 +18,27 @@ public class ItemDAO extends MySQLiteHelper {
 
     private final String TABLE_NAME = "item";
 
+    private final String COLUMN_ID = "id";
+    private final String COLUMN_ANSWER = "answer";
+    private final String COLUMN_QUIZ_ID = "quiz_id";
+
     public ItemDAO(Context context) {
         super(context);
     }
 
     public List<Item> findItemsByQuiz(int quizId) {
-        String[] columns = {"id", "answer"};
-        String selection = "quiz_id=?";
+        String[] columns = {COLUMN_ID, COLUMN_ANSWER};
+        String selection = COLUMN_QUIZ_ID + "=?";
         String[] selectionArgs = {String.valueOf(quizId)};
-        String orderBy = "id";
+        String orderBy = COLUMN_ID;
         Cursor cursor = getReadableDatabase().query(TABLE_NAME, columns, selection, selectionArgs, null, null, orderBy);
 
         List<Item> items = new ArrayList<>();
 
         try {
             while (cursor.moveToNext()) {
-                int id = cursor.getInt(cursor.getColumnIndex("id"));
-                String answer = cursor.getString(cursor.getColumnIndex("answer"));
+                int id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID));
+                String answer = cursor.getString(cursor.getColumnIndex(COLUMN_ANSWER));
 
                 items.add(new Item(id, answer));
             }
@@ -55,8 +59,8 @@ public class ItemDAO extends MySQLiteHelper {
      */
     public int insert(Item item) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("answer", item.getAnswer());
-        contentValues.put("quiz_id", item.getQuizId());
+        contentValues.put(COLUMN_ANSWER, item.getAnswer());
+        contentValues.put(COLUMN_QUIZ_ID, item.getQuizId());
         return (int) getWritableDatabase().insert(TABLE_NAME, null, contentValues);
     }
 }

@@ -17,10 +17,11 @@ import br.com.jackson.quizapp.R;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
+    private final static String DATABASE_NAME = "quiz";
     private Context context;
 
     public MySQLiteHelper(Context context) {
-        super(context, "quiz", null, 1);
+        super(context, MySQLiteHelper.DATABASE_NAME, null, 1);
         this.context = context;
     }
 

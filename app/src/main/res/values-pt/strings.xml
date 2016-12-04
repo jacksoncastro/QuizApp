@@ -15,9 +15,12 @@
     <string name="add_questions">Adicionar Questões</string>
     <string name="label_level_game">Nível</string>
     <string name="field_link_image_empty">Campo Link imagem não pode ser vazio</string>
-    <string name="field_question_empty">Campo Questão não pode ser vazio</string>
+    <string name="field_question_empty">Campo Pergunta não pode ser vazio</string>
     <string name="radio_button_correct_item_empty">Marque a resposta correta</string>
     <string name="form_quiz_save_success">Formulário salvo com sucesso</string>
+    <string name="no_questions_were_added">Nenhuma questão foi adicionada</string>
+    <string name="right_answer">Resposta certa</string>
+    <string name="wrong_answer">Resposta errada</string>
 
     <string-array name="level_game">
         <item>Fácil</item>

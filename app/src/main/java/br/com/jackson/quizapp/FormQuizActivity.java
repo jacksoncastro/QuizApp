@@ -20,6 +20,7 @@ import br.com.jackson.quizapp.adapters.MyCustomAdapter;
 import br.com.jackson.quizapp.dao.ItemDAO;
 import br.com.jackson.quizapp.dao.QuizDAO;
 import br.com.jackson.quizapp.dao.RightAnswerDAO;
+import br.com.jackson.quizapp.exceptions.FormValidationException;
 import br.com.jackson.quizapp.model.Item;
 import br.com.jackson.quizapp.model.Quiz;
 import br.com.jackson.quizapp.model.RightAnswer;
@@ -68,10 +69,7 @@ public class FormQuizActivity extends AppCompatActivity {
         EditText newAnswer = (EditText) findViewById(R.id.new_answer);
         answers.add(new Item(newAnswer.getText().toString()));
 
-        //instantiate custom adapter
-        MyCustomAdapter adapter = new MyCustomAdapter(answers, FormQuizActivity.this);
-
-        listView.setAdapter(adapter);
+        listView.deferNotifyDataSetChanged();
 
         newAnswer.setText(null);
 
@@ -121,6 +119,13 @@ public class FormQuizActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.answers);
         MyCustomAdapter myCustomAdapter = (MyCustomAdapter) listView.getAdapter();
+
+        int countQuestions = myCustomAdapter.getCount();
+
+        if (countQuestions == 0) {
+            throw new FormValidationException(R.string.no_questions_were_added);
+        }
+
         int correctItem = myCustomAdapter.getSelectedPositionRadioButton();
 
         if (correctItem == -1) {

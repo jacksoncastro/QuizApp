@@ -30,6 +30,7 @@ public class QuizActivity extends AppCompatActivity {
     private int currentPosition = 0;
     private int punctuation = 0;
     private String userName;
+    private LevelEnum levelEnum;
 
 
     @Override
@@ -37,13 +38,16 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        final ListView listView = (ListView) findViewById(R.id.itens);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        listView.setItemChecked(0, true);
+        initializeQuiz();
+    }
+
+    private void initializeQuiz() {
+
+        final ListView listView = getListView();
 
         Bundle extras = getIntent().getExtras();
 
-        LevelEnum levelEnum = LevelEnum.EASY;
+        this.levelEnum = LevelEnum.EASY;
 
         if (extras != null) {
             if (extras.get(Constants.EXTRA_USER_NAME) != null) {
@@ -55,68 +59,109 @@ public class QuizActivity extends AppCompatActivity {
             if (extras.get(Constants.EXTRA_PUNCTUATION) != null) {
                 punctuation = extras.getInt(Constants.EXTRA_PUNCTUATION);
             }
+            if (extras.get(Constants.EXTRA_LEVEL) != null) {
+                levelEnum = extras.getParcelable(Constants.EXTRA_LEVEL);
+            }
         }
 
         List<Quiz> quizList = getQuiz(levelEnum);
 
         if (quizList.size() <= currentPosition) {
-            Intent intent = new Intent(QuizActivity.this, PunctuationAcitivity.class);
-            intent.putExtra(Constants.EXTRA_TOTAL_QUESTIONS, quizList.size());
-            intent.putExtra(Constants.EXTRA_PUNCTUATION, punctuation);
-            intent.putExtra(Constants.EXTRA_USER_NAME, userName);
-
-            startActivity(intent);
-            finish();
+            startPunctuationActivity(quizList);
         } else {
-            currentQuestion = quizList.get(currentPosition);
-
-            ImageView imageView = (ImageView) findViewById(R.id.imageQuiz);
-
-            Uri uri = Uri.parse(currentQuestion.getImageLink());
-            Picasso.with(QuizActivity.this).load(uri).error(R.drawable.image_not_found).into(imageView);
-
-            TextView question = (TextView) findViewById(R.id.question);
-            question.setText(currentQuestion.getQuestion());
-
-            List<String> items = getItemsToArrayString(currentQuestion.getItems());
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, items);
-
-            listView.setAdapter(adapter);
-
-            final Button checkQuestionButton = (Button) findViewById(R.id.checkQuestionButton);
-            checkQuestionButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = listView.getCheckedItemPosition();
-
-                    if (currentQuestion.getRightAnswer() == position) {
-                        Toast.makeText(QuizActivity.this, "Resposta certa", Toast.LENGTH_SHORT).show();
-                        punctuation++;
-                    } else {
-                        Toast.makeText(QuizActivity.this, "Resposta errada.", Toast.LENGTH_SHORT).show();
-                    }
-
-                    Intent intent = new Intent(QuizActivity.this, QuizActivity.class);
-                    intent.putExtra(Constants.EXTRA_LAST_QUESTION_POSITION, currentPosition + 1);
-                    intent.putExtra(Constants.EXTRA_PUNCTUATION, punctuation);
-                    intent.putExtra(Constants.EXTRA_USER_NAME, userName);
-
-                    startActivity(intent);
-                    finish();
-                }
-            });
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView arg0, View view, int position, long itemId) {
-                    if (checkQuestionButton != null && !checkQuestionButton.isEnabled()) {
-                        checkQuestionButton.setEnabled(true);
-                    }
-                }
-            });
+            nextQuestion(listView, quizList);
         }
+    }
+
+    private void nextQuestion(ListView listView, List<Quiz> quizList) {
+        currentQuestion = quizList.get(currentPosition);
+
+        setImageQuestion();
+
+        TextView question = (TextView) findViewById(R.id.question);
+        question.setText(currentQuestion.getQuestion());
+
+        List<String> items = getItemsToArrayString(currentQuestion.getItems());
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, items);
+
+        listView.setAdapter(adapter);
+
+        final Button checkQuestionButton = (Button) findViewById(R.id.checkQuestionButton);
+        checkQuestionButton.setOnClickListener(getListenerCheckQuestionButton(listView));
+
+        listView.setOnItemClickListener(getListenerListView(checkQuestionButton));
+    }
+
+    private void setImageQuestion() {
+        ImageView imageView = (ImageView) findViewById(R.id.imageQuiz);
+
+        Uri uri = Uri.parse(currentQuestion.getImageLink());
+        Picasso.with(QuizActivity.this).load(uri).error(R.drawable.image_not_found).into(imageView);
+    }
+
+    private void startPunctuationActivity(List<Quiz> quizList) {
+        Intent intent = new Intent(QuizActivity.this, PunctuationActivity.class);
+
+        Bundle bundle = new Bundle();
+
+        bundle.putInt(Constants.EXTRA_TOTAL_QUESTIONS, quizList.size());
+        bundle.putInt(Constants.EXTRA_PUNCTUATION, punctuation);
+        bundle.putString(Constants.EXTRA_USER_NAME, userName);
+
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+        finish();
+    }
+
+    private AdapterView.OnItemClickListener getListenerListView(final Button checkQuestionButton) {
+        return new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView arg0, View view, int position, long itemId) {
+                if (checkQuestionButton != null && !checkQuestionButton.isEnabled()) {
+                    checkQuestionButton.setEnabled(true);
+                }
+            }
+        };
+    }
+
+    private View.OnClickListener getListenerCheckQuestionButton(final ListView listView) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int position = listView.getCheckedItemPosition();
+
+                if (currentQuestion.getRightAnswer() == position) {
+                    Toast.makeText(QuizActivity.this, R.string.right_answer, Toast.LENGTH_SHORT).show();
+                    punctuation++;
+                } else {
+                    Toast.makeText(QuizActivity.this, R.string.wrong_answer, Toast.LENGTH_SHORT).show();
+                }
+
+                Intent intent = new Intent(QuizActivity.this, QuizActivity.class);
+
+                Bundle bundle = new Bundle();
+
+                bundle.putInt(Constants.EXTRA_LAST_QUESTION_POSITION, currentPosition + 1);
+                bundle.putInt(Constants.EXTRA_PUNCTUATION, punctuation);
+                bundle.putString(Constants.EXTRA_USER_NAME, userName);
+                bundle.putParcelable(Constants.EXTRA_LEVEL, levelEnum);
+
+                intent.putExtras(bundle);
+
+                startActivity(intent);
+                finish();
+            }
+        };
+    }
+
+    private ListView getListView() {
+        ListView listView = (ListView) findViewById(R.id.itens);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        listView.setItemChecked(0, true);
+        return listView;
     }
 
     private List<String> getItemsToArrayString(List<Item> items) {

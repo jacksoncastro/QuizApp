@@ -17,6 +17,9 @@
     <string name="field_question_empty">Field question cannot be empty</string>
     <string name="radio_button_correct_item_empty">Select the correct answer</string>
     <string name="form_quiz_save_success">Form save with success</string>
+    <string name="no_questions_were_added">No questions were added</string>
+    <string name="right_answer">Right answer</string>
+    <string name="wrong_answer">Wrong answer</string>
 
     <string-array name="level_game">
         <item>Easy</item>

@@ -1,15 +1,13 @@
 package br.com.jackson.quizapp;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class PunctuationAcitivity extends AppCompatActivity {
+public class PunctuationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +24,7 @@ public class PunctuationAcitivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PunctuationAcitivity.this, MainActivity.class);
+                Intent intent = new Intent(PunctuationActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -47,9 +45,8 @@ public class PunctuationAcitivity extends AppCompatActivity {
             int punctuation = extras.getInt(Constants.EXTRA_PUNCTUATION);
             int totalQuestions = extras.getInt(Constants.EXTRA_TOTAL_QUESTIONS);
 
-            Resources resources = getResources();
-            String yourPunctuation = String.format(resources.getString(R.string.punctuation), userName);
-            String assertiveness = String.format(resources.getString(R.string.assertiveness), punctuation, totalQuestions);
+            String yourPunctuation = getString(R.string.punctuation, userName);
+            String assertiveness = getString(R.string.assertiveness, punctuation, totalQuestions);
 
             TextView yourPunctuationText = (TextView) findViewById(R.id.your_punctuation);
             yourPunctuationText.setText(String.valueOf(yourPunctuation));

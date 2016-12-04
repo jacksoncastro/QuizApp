@@ -14,6 +14,8 @@ import br.com.jackson.quizapp.model.RightAnswer;
 public class RightAnswerDAO extends MySQLiteHelper {
 
     private final String TABLE_NAME = "right_answer";
+    private final String COLUMN_QUIZ_ID = "quiz_id";
+    private final String COLUMN_ITEM_ID = "item_id";
 
     public RightAnswerDAO(Context context) {
         super(context);
@@ -21,21 +23,21 @@ public class RightAnswerDAO extends MySQLiteHelper {
 
     public int insert(RightAnswer rightAnswer) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("quiz_id", rightAnswer.getQuizId());
-        contentValues.put("item_id", rightAnswer.getItemId());
+        contentValues.put(COLUMN_QUIZ_ID, rightAnswer.getQuizId());
+        contentValues.put(COLUMN_ITEM_ID, rightAnswer.getItemId());
         return (int) getWritableDatabase().insert(TABLE_NAME, null, contentValues);
     }
 
 
     public int getRightItemIdQuiz(int quizId) {
-        String[] columns = {"item_id"};
-        String selection = "quiz_id=?";
+        String[] columns = {COLUMN_ITEM_ID};
+        String selection = COLUMN_QUIZ_ID + "=?";
         String[] selectionArgs = {String.valueOf(quizId)};
         Cursor cursor = getWritableDatabase().query(TABLE_NAME, columns, selection, selectionArgs, null, null, null);
 
         try {
             while (cursor.moveToNext()) {
-                return cursor.getInt(cursor.getColumnIndex("item_id"));
+                return cursor.getInt(cursor.getColumnIndex(COLUMN_ITEM_ID));
             }
             return 0;
         } finally {

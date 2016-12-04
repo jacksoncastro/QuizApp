@@ -11,7 +11,6 @@ import java.util.List;
 
 import br.com.jackson.quizapp.R;
 import br.com.jackson.quizapp.model.Item;
-import br.com.jackson.quizapp.model.Quiz;
 
 public class MyItemInfoAdapter extends RecyclerView.Adapter<MyItemInfoAdapter.ViewHolder> {
 

@@ -13,12 +13,16 @@ import br.com.jackson.quizapp.model.Quiz;
 
 public class QuestionsActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_questions);
 
+        // create recycler view of form
+        createRecyclerView();
+    }
+
+    private void createRecyclerView() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view_questions);
 
         recyclerView.setHasFixedSize(true);

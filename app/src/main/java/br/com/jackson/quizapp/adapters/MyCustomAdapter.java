@@ -39,8 +39,6 @@ public class MyCustomAdapter extends BaseAdapter implements ListAdapter {
 
     @Override
     public long getItemId(int pos) {
-//        return list.get(pos).getId();
-//        just return 0 if your list items do not have an Id variable.
         return 0;
     }
 
