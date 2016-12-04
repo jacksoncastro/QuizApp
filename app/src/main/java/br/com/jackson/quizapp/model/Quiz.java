@@ -3,6 +3,7 @@ package br.com.jackson.quizapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,17 +38,19 @@ public class Quiz implements Parcelable {
     }
 
     protected Quiz(Parcel in) {
+        ArrayList<Item> items = new ArrayList<>();
+        in.readTypedList(items, Item.CREATOR);
+        this.items = items;
+
         id = in.readInt();
         question = in.readString();
         imageLink = in.readString();
         rightAnswer = in.readInt();
-
-//        in.readTypedList(items, Item.CREATOR);
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-//        dest.writeTypedList(items);
+        dest.writeTypedList(items);
 
         dest.writeInt(id);
         dest.writeString(question);

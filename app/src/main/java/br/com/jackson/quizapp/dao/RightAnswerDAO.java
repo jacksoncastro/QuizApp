@@ -46,4 +46,31 @@ public class RightAnswerDAO extends MySQLiteHelper {
             }
         }
     }
+
+    public boolean itemIsRight(Integer quizId, Integer positionItem) {
+
+        String sql = "SELECT t1.item_id = (" +
+                            "SELECT t2.id" +
+                            "  FROM item t2" +
+                            " WHERE t2.quiz_id = ?" +
+                            " ORDER BY t2.id" +
+                            " LIMIT 1" +
+                            " OFFSET ?" +
+                        " ) AS is_right" +
+                        "  FROM right_answer t1" +
+                        " WHERE t1.quiz_id = ?";
+
+        String[] selectionArgs = new String[]{String.valueOf(quizId), String.valueOf(positionItem), String.valueOf(quizId)};
+        Cursor cursor = getReadableDatabase().rawQuery(sql, selectionArgs);
+
+        try {
+            while (cursor.moveToNext()) {
+                // if return is "1" then is true else false
+                return cursor.getInt(cursor.getColumnIndex("is_right")) == 1;
+            }
+        } finally {
+            closeQuietly(cursor);
+        }
+        return false;
+    }
 }

@@ -1,6 +1,7 @@
 package br.com.jackson.quizapp.helper;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -49,4 +50,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(sql);
         onCreate(sqLiteDatabase);
     }
+
+    public void closeQuietly(Cursor cursor) {
+        try {
+            if (cursor != null && !cursor.isClosed()) {
+                cursor.close();
+            }
+        } catch (Exception e) {
+        }
+    }
+
 }

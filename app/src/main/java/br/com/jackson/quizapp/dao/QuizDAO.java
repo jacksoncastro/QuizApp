@@ -55,14 +55,14 @@ public class QuizDAO extends MySQLiteHelper {
         return quizList;
     }
 
-    public List<Quiz> findAllRandomWithLimit(int limit) {
+    public ArrayList<Quiz> findAllRandomWithLimit(int limit) {
 
         String sql = "SELECT %s, %s, %s FROM %s GROUP BY 1,2,3 ORDER BY RANDOM() LIMIT %d;";
         sql = String.format(sql, COLUMN_ID, COLUMN_QUESTION, COLUMN_IMAGE_LINK, TABLE_NAME, limit);
 
         Cursor cursor = getReadableDatabase().rawQuery(sql, null);
 
-        List<Quiz> quizList = new ArrayList<>();
+        ArrayList<Quiz> quizList = new ArrayList<>();
 
         try {
             while (cursor.moveToNext()) {

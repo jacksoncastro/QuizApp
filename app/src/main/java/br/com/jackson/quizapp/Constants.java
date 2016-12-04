@@ -11,4 +11,5 @@ public class Constants {
     public static final String EXTRA_PUNCTUATION = "PUNCTUATION";
     public static final String EXTRA_TOTAL_QUESTIONS = "TOTAL_QUESTIONS";
     public static final String EXTRA_QUIZ = "EXTRA_QUIZ";
+    public static final String EXTRA_QUIZ_LIST = "EXTRA_QUIZ_LIST";
 }

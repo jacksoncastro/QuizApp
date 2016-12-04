@@ -15,11 +15,13 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.jackson.quizapp.dao.ItemDAO;
 import br.com.jackson.quizapp.dao.QuizDAO;
+import br.com.jackson.quizapp.dao.RightAnswerDAO;
 import br.com.jackson.quizapp.enums.LevelEnum;
 import br.com.jackson.quizapp.model.Item;
 import br.com.jackson.quizapp.model.Quiz;
@@ -31,6 +33,7 @@ public class QuizActivity extends AppCompatActivity {
     private int punctuation = 0;
     private String userName;
     private LevelEnum levelEnum;
+    private ArrayList<Quiz> quizList;
 
 
     @Override
@@ -62,9 +65,14 @@ public class QuizActivity extends AppCompatActivity {
             if (extras.get(Constants.EXTRA_LEVEL) != null) {
                 levelEnum = extras.getParcelable(Constants.EXTRA_LEVEL);
             }
+            if (extras.getParcelableArrayList(Constants.EXTRA_QUIZ_LIST) != null) {
+                quizList = extras.getParcelableArrayList(Constants.EXTRA_QUIZ_LIST);
+            }
         }
 
-        List<Quiz> quizList = getQuiz(levelEnum);
+        if (quizList == null) {
+            this.quizList = getQuiz(levelEnum);
+        }
 
         if (quizList.size() <= currentPosition) {
             startPunctuationActivity(quizList);
@@ -133,7 +141,9 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View view) {
                 int position = listView.getCheckedItemPosition();
 
-                if (currentQuestion.getRightAnswer() == position) {
+                boolean isRight = itemIsRight(currentQuestion.getId(), position);
+
+                if (isRight) {
                     Toast.makeText(QuizActivity.this, R.string.right_answer, Toast.LENGTH_SHORT).show();
                     punctuation++;
                 } else {
@@ -148,6 +158,7 @@ public class QuizActivity extends AppCompatActivity {
                 bundle.putInt(Constants.EXTRA_PUNCTUATION, punctuation);
                 bundle.putString(Constants.EXTRA_USER_NAME, userName);
                 bundle.putParcelable(Constants.EXTRA_LEVEL, levelEnum);
+                bundle.putParcelableArrayList(Constants.EXTRA_QUIZ_LIST, quizList);
 
                 intent.putExtras(bundle);
 
@@ -155,6 +166,18 @@ public class QuizActivity extends AppCompatActivity {
                 finish();
             }
         };
+    }
+
+    private boolean itemIsRight(Integer quizId, Integer positionItem) {
+        RightAnswerDAO rightAnswerDAO = new RightAnswerDAO(QuizActivity.this);
+
+        try {
+            return rightAnswerDAO.itemIsRight(quizId, positionItem);
+        } finally {
+            if (rightAnswerDAO != null) {
+                rightAnswerDAO.close();
+            }
+        }
     }
 
     private ListView getListView() {
@@ -172,18 +195,18 @@ public class QuizActivity extends AppCompatActivity {
         return list;
     }
 
-    public List<Quiz> getQuiz(LevelEnum levelEnum) {
+    public ArrayList<Quiz> getQuiz(LevelEnum levelEnum) {
         QuizDAO quizDAO = new QuizDAO(QuizActivity.this);
 
         try {
-            List<Quiz> quizList = quizDAO.findAllRandomWithLimit(levelEnum.getAmount());
+            ArrayList<Quiz> quizList = quizDAO.findAllRandomWithLimit(levelEnum.getAmount());
 
             for (Quiz quiz : quizList) {
                 List<Item> items = findItemsByQuizId(quiz.getId());
 
                 quiz.setItems(items);
             }
-            return  quizList;
+            return quizList;
         } finally {
             if (quizDAO != null) {
                 quizDAO.close();
